@@ -79,11 +79,18 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return true; // fixme
+      // you're given a row index, which gives you the row array
+      // iterate through that row array
+      // if at least 2 indexes in that row array are occupied, then return true
+      // else return false
+      return false; // fixme
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
+      // iterate through every row array
+      // if at least 2 indexes in any row array are occupied, then return true
+      // else return false
       return false; // fixme
     },
 
@@ -94,11 +101,20 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      // you're given a column index, which is an index inside of each row array
+      // iterate through each row array, only checking the specified column index
+      // if at least 2 rows have that index occupied, return true
+      // else return false
       return false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      // start at a column index of 0
+      // iterate through every row, checking that specific column index first
+      // if at least 2 rows have that index occupied, return true
+      // else, go to the next column index and iterate through every row again until you reach the end
+      // if you reach the end and there are no conflicts, return false
       return false; // fixme
     },
 
@@ -109,11 +125,22 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      // major diagonal:
+      //[x]
+      //   [ ]
+      //      [ ]
+      // start at the specified row index and column index
+      // go to the next row array (row index + 1) and the next column (column index + 1)
+      // check if it is occupied, if it is, then return true
+      // else continue to the next row array and the next column and repeat process until the end
+      // if no conflicts found, return false
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      // Iterate through the entire first row
+      // Iterate through the first column in every row
       return false; // fixme
     },
 
@@ -124,11 +151,22 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+      // minor diagonal:
+      //       [ ]
+      //    [ ]
+      // [x]
+      // start at the specified row array and column index
+      // go to the previous row array (row index - 1) and the next column (column index + 1)
+      // check if it is occupied, if it is, then return true
+      // else continue the even more previous row, and the next column and repeat process until the end
+      // if not conflict found, return false
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      // iterate through the first column index of every row
+      // iterate through the entire last row array
       return false; // fixme
     }
 
