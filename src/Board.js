@@ -80,8 +80,18 @@
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
       // you're given a row index, which gives you the row array
+      let row = this.get(rowIndex); // gives you the row array at the given rowIndex
       // iterate through that row array
-      // if at least 2 indexes in that row array are occupied, then return true
+      let counter = 0; // keep track of how many squares are occupied
+      for (let i = 0; i < row.length; i++) {
+        // if at least 2 indexes in that row array are occupied, then return true
+        if (row[i] > 0) {
+          counter ++;
+        }
+        if (counter >= 2) {
+          return true;
+        }
+      }
       // else return false
       return false; // fixme
     },
@@ -89,6 +99,12 @@
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
       // iterate through every row array
+      let n = this.get('n');
+      for (let i = 0; i < n; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      }
       // if at least 2 indexes in any row array are occupied, then return true
       // else return false
       return false; // fixme
@@ -102,19 +118,39 @@
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
       // you're given a column index, which is an index inside of each row array
-      // iterate through each row array, only checking the specified column index
-      // if at least 2 rows have that index occupied, return true
-      // else return false
+      let col = this.get(colIndex);
+      let boardSize = this.get('n');
+      let counter = 0;
+      for (let i = 0; i < boardSize; i++) {
+        let row = this.get(i);
+        if (row[colIndex] > 0) {
+          counter++;
+        }
+      }
+
+      if (counter >= 2) {
+        return true;
+      }
+      // start at the very first row array
+      // check if there is a conflict in that row array using hasRowConflictAt()
+      // if there is NOT, then check the next row array
+      // if there is a conflict, then return true, which will break out of the for loop
+      // if there are no conflicts at all, then the for loop will end and this function will return false
       return false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      let boardSize = this.get('n');
+      for (let i = 0; i < boardSize; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
       // start at a column index of 0
-      // iterate through every row, checking that specific column index first
-      // if at least 2 rows have that index occupied, return true
-      // else, go to the next column index and iterate through every row again until you reach the end
-      // if you reach the end and there are no conflicts, return false
+      // check if there is a conflict at the given column index
+      // if there is NOT, then check the next column
+      // if there is, then return true, which will break out of the for loop
       return false; // fixme
     },
 
@@ -124,11 +160,28 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow, rowIndex) {
+      var rowIndex = rowIndex || 0;
+      //this.get(majorDiagonalColumnIndexAtFirstRow));
       // major diagonal:
       //[x]
       //   [ ]
       //      [ ]
+      let boardSize = this.get('n');
+      let counter = 0;
+      let currentColumn = majorDiagonalColumnIndexAtFirstRow;
+      for (let i = rowIndex; i < boardSize; i++) {
+        let row = this.get(i);
+        //console.log('row', row);
+        if (row[currentColumn] > 0) {
+          counter++;
+        }
+        currentColumn++;
+      }
+
+      if (counter >= 2) {
+        return true;
+      }
       // start at the specified row index and column index
       // go to the next row array (row index + 1) and the next column (column index + 1)
       // check if it is occupied, if it is, then return true
@@ -137,10 +190,25 @@
       return false; // fixme
     },
 
+
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
       // Iterate through the entire first row
       // Iterate through the first column in every row
+      let boardSize = this.get('n');
+      // console.log('board size', boardSize);
+      for (let column = 0; column < boardSize; column++) {
+        //console.log('column', column);
+        if (this.hasMajorDiagonalConflictAt(column)) {
+          return true;
+        }
+      }
+
+      for (let row = 0; row < boardSize; row++) {
+        if (this.hasMajorDiagonalConflictAt(0, row)) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -150,25 +218,82 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+
+    /* matrix provided in test spec
+    var matrix = [
+      [0, 0, 1, 0],
+      [0, 0, 0, 0],
+      [1, 0, 0, 0],
+      [0, 0, 0, 0]
+    ];
+    */
+    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow, rowIndex) {
+      let boardSize = this.get('n');
+
+      var rowIndex = rowIndex || boardSize - 1;
       // minor diagonal:
-      //       [ ]
+      //       [x]
       //    [ ]
       // [x]
+      let counter = 0;
+      let currentColumn = minorDiagonalColumnIndexAtFirstRow;
+      for (let i = rowIndex; i >= 0; i--) {
+        let row = this.get(i);
+
+        if (row[currentColumn] > 0) {
+          counter++;
+        }
+        currentColumn++;
+      }
+
+      if (counter >= 2) {
+        return true;
+      }
       // start at the specified row array and column index
       // go to the previous row array (row index - 1) and the next column (column index + 1)
       // check if it is occupied, if it is, then return true
       // else continue the even more previous row, and the next column and repeat process until the end
       // if not conflict found, return false
       return false; // fixme
+
+      /* EXTRA STUFF==================
+      // var rowIndex = rowIndex || 0;
+      // let boardSize = this.get('n');
+      // let counter = 0;
+      // let currentColumn = minorDiagonalColumnIndexAtFirstRow;
+      // for (let i = 0; i < boardSize, i++;) {
+      //   let row = this.get(i);
+      //   if (row[currentColumn] > 0) {
+      //     counter++;
+      //   }
+      //   currentColumn--;
+      // }
+      // if (counter >= 2) {
+      //   return true;
+      // }
+      ===============================*/
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
       // iterate through the first column index of every row
       // iterate through the entire last row array
+      let boardSize = this.get('n');
+      // console.log('board size', boardSize);
+      for (let column = 0; column < boardSize; column++) {
+        //console.log('column', column);
+        if (this.hasMinorDiagonalConflictAt(column)) {
+          return true;
+        }
+      }
+
+      for (let row = 0; row < boardSize; row++) {
+        if (this.hasMinorDiagonalConflictAt(0, row)) {
+          return true;
+        }
+      }
       return false; // fixme
-    }
+    },
 
     /*--------------------  End of Helper Functions  ---------------------*/
 
