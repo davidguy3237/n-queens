@@ -288,7 +288,7 @@
       }
 
       for (let row = 0; row < boardSize; row++) {
-        if (this.hasMinor_DiagonalConflictAt(0, row)) {
+        if (this.hasMinorDiagonalConflictAt(0, row)) {
           return true;
         }
       }
