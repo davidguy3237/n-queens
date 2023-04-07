@@ -14,32 +14,25 @@
 window.findNRooksSolution = function(n) {
 
   let board = new Board({n: n});
-  let remainingPieces = n;
-  var row = 0;
-  var column = 0;
-  board.togglePiece(row, column);
-  remainingPieces--;
+  let solution = board.rows();
 
-
-  while (remainingPieces > 0) {
-    if (column >= n - 1 && row < n - 1) {
-      column = 0;
-      row ++;
-    } else if (column < n - 1) {
-      column ++;
-    } else if (row === n - 1 && column === n - 1) {
-      row = 0;
-      column = 0;
+  let solutionFinder = function(row = 0) {
+    if (row >= n) {
+      solution = board.rows().map(row => {
+        return row.slice();
+      });
+      return;
     }
 
-    board.togglePiece(row, column);
-    if (!board.hasAnyRooksConflicts()) {
-      remainingPieces--;
-    } else {
+    for (let column = 0; column < n; column++) {
+      board.togglePiece(row, column);
+      if (!board.hasAnyRooksConflicts()) {
+        solutionFinder(row + 1);
+      }
       board.togglePiece(row, column);
     }
-  }
-  var solution = board.rows();
+  };
+  solutionFinder();
   return solution;
 };
 
