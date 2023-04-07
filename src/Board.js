@@ -62,7 +62,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -288,7 +288,7 @@
       }
 
       for (let row = 0; row < boardSize; row++) {
-        if (this.hasMinorDiagonalConflictAt(0, row)) {
+        if (this.hasMinor_DiagonalConflictAt(0, row)) {
           return true;
         }
       }
